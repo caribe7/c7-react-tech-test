@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Countdown from 'react-countdown';
 import './styles.scss'
 
-const Fetch = () =>{
+const Home = () =>{
 
     useEffect(() => {
         function getAlerts() {
@@ -60,4 +60,4 @@ return(
     
 )
 }
-export default Fetch;
+export default Home;
