@@ -3,7 +3,6 @@ import Countdown from 'react-countdown';
 import './styles.scss'
 
 const Home = () =>{
-
     useEffect(() => {
         function getAlerts() {
           fetch('https://api.caribe7.com/events/random')
@@ -14,11 +13,8 @@ const Home = () =>{
             setResultclass(object.class);
             setEventId(object.event_id);
             setEventDescription(object.description);
-            setEventStart(object.event_datetime);
             setRunners(object.runners);
-            setStatus(object.status)
-            console.log('this is the status'+status);
-            console.log(eventStart);
+            setData(object);
         })
         .catch((error)=>console.log('error',error));
     };
@@ -31,9 +27,9 @@ const Home = () =>{
     const [resultclass, setResultclass]=useState(null);
     const [eventId, setEventId]=useState('');
     const [eventDescription, setEventDescription]=useState('');
-    const [eventStart, setEventStart]=useState('');
     const [runners, setRunners] = useState([]);
-    const [status, setStatus] = useState('');
+    const [data, setData] = useState([]);
+
     
     const displayRunners = runners.map ((item)=>
         <li key={item.runner_id}>
@@ -43,21 +39,26 @@ const Home = () =>{
     );
 
 return(
-    <div className="container">
+    <div className="container"> 
         <div className="left">
-            <p className="bold">Event Id:</p><p> {eventId}</p>
-            <p className="bold">Event Description: </p><p> {eventDescription}</p>
-            {status==='CLOSED' ? <p><p className="bold">Event Start Time:</p> {eventStart}</p> : <Countdown date={Date.parse(eventStart)+14400}/>}
-            {resultclass?.class_id ? <p><p className="bold">Class id:</p> {resultclass.class_id}</p> : <p>loading...</p>}
-            {resultclass?.description ? <p><p className="bold">Class description: </p>{resultclass.description}</p> : <p>loading...</p>}
+            <div><p className="bold">Event Id: </p> {eventId}</div>
+            <div> <p className="bold">Event Description:</p>{eventDescription}</div>
+            {data?.status ?  
+                data.status==='CLOSED' ? 
+                    data?.event_datetime ? <div><p className="bold">Event Start Time:</p> {data.event_datetime}</div> : null 
+                : <div><p className="bold">Countdown:</p> <Countdown date={Date.parse(data.event_datetime)+14400}/></div>
+            : <p>loading...</p> }
+            {resultclass?.class_id ? <div><p className="bold">Class id:</p>{resultclass.class_id}</div> : <p>loading...</p>}
+            {resultclass?.description ? <div><p className="bold">Class description:</p>{resultclass.description}</div> : <p>loading...</p>}
         </div>
         <div className="right">
-            <p className="bold">Number of runners: </p><p> {runners.length}</p>
+            <div><p className="bold">Number of runners:</p>{runners.length}</div>
             <ul>{displayRunners}</ul>
         </div>
         
     </div>
-    
+
 )
 }
 export default Home;
+
